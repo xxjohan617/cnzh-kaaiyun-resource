@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信息卡片｜日常查询与对照 · 开云</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #f9e2cf 0%, #f6d5b3 40%, #efc8a2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.2rem;
+            line-height: 1.6;
+            color: #2c2a28;
+        }
+
+        .page-wrapper {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* 主视觉卡片 — 暖色渐变背景 + 柔和阴影 */
+        .hero-card {
+            background: #ffffff;
+            border-radius: 40px 40px 32px 32px;
+            padding: 2.4rem 2rem 2.8rem;
+            box-shadow: 0 16px 48px -12px rgba(140, 80, 40, 0.2), 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 2.4rem;
+            transition: box-shadow 0.25s;
+        }
+
+        .hero-card:hover {
+            box-shadow: 0 20px 56px -10px rgba(160, 90, 45, 0.25);
+        }
+
+        .hero-title {
+            font-size: 2.4rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            color: #472d1c;
+            margin-bottom: 0.8rem;
+            border-left: 5px solid #d9a87c;
+            padding-left: 1.2rem;
+        }
+
+        .hero-sub {
+            font-size: 1.12rem;
+            color: #584d3f;
+            margin-top: 0.6rem;
+            margin-bottom: 1.6rem;
+            max-width: 680px;
+            font-weight: 350;
+        }
+
+        .hero-text {
+            font-size: 1rem;
+            color: #3b352d;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-text a {
+            color: #8b5a32;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed #cda37c;
+            transition: border-bottom 0.2s, color 0.2s;
+        }
+
+        .hero-text a:hover {
+            border-bottom: 2px solid #8b5a32;
+            color: #613f21;
+        }
+
+        .hero-note {
+            background: #f8ede2;
+            border-radius: 60px;
+            display: inline-block;
+            padding: 0.5rem 1.6rem;
+            font-size: 0.95rem;
+            color: #4e3c2c;
+            margin-top: 0.4rem;
+            border: 1px solid #e6d1bd;
+        }
+
+        /* 两列布局 — 用途卡片 + 适合人群 */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2rem 1.8rem 2.2rem;
+            box-shadow: 0 8px 28px -8px rgba(110, 70, 30, 0.12);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(235, 215, 195, 0.5);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 36px -12px rgba(120, 75, 35, 0.2);
+        }
+
+        .card-header {
+            font-size: 1.5rem;
+            font-weight: 450;
+            color: #3b2d1f;
+            margin-bottom: 1.4rem;
+            border-bottom: 2px solid #eedac8;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            background: #dbb494;
+            color: #2b1f14;
+            font-size: 1rem;
+            border-radius: 40px;
+            padding: 0.1rem 0.7rem;
+            font-weight: 400;
+        }
+
+        .card p {
+            margin-bottom: 1rem;
+            color: #3f372e;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0.2rem;
+        }
+
+        .card li {
+            padding: 0.4rem 0 0.4rem 1.8rem;
+            position: relative;
+            color: #3f372e;
+        }
+
+        .card li::before {
+            content: "·";
+            position: absolute;
+            left: 0.2rem;
+            color: #b5825b;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        /* 自然链接段落卡片 */
+        .link-paragraph-card {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2rem 2rem 2.4rem;
+            box-shadow: 0 8px 28px -8px rgba(110, 70, 30, 0.1);
+            margin-bottom: 2rem;
+            border: 1px solid #f0dfcf;
+        }
+
+        .link-paragraph-card h2 {
+            font-size: 1.5rem;
+            font-weight: 450;
+            color: #3b2d1f;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid #ca9f7b;
+            padding-left: 1rem;
+        }
+
+        .link-paragraph-card p {
+            margin-bottom: 1rem;
+            color: #3f372e;
+        }
+
+        .link-paragraph-card a {
+            color: #8b5a32;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed #cda37c;
+            transition: border-bottom 0.2s, color 0.2s;
+        }
+
+        .link-paragraph-card a:hover {
+            border-bottom: 2px solid #8b5a32;
+            color: #613f21;
+        }
+
+        .inline-tag {
+            display: inline-block;
+            background: #efe2d3;
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            color: #4d3b29;
+            margin-right: 0.3rem;
+        }
+
+        /* FAQ 摘要 — 紧凑卡片 */
+        .faq-mini {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 1.6rem 2rem 2rem;
+            box-shadow: 0 8px 28px -8px rgba(110, 70, 30, 0.08);
+            border: 1px solid #f0dfcf;
+        }
+
+        .faq-mini h3 {
+            font-size: 1.3rem;
+            font-weight: 450;
+            color: #3b2d1f;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .faq-mini h3 small {
+            font-size: 0.85rem;
+            font-weight: 350;
+            color: #7f6753;
+            background: #f1e3d6;
+            padding: 0.1rem 0.8rem;
+            border-radius: 40px;
+        }
+
+        .faq-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #efe2d3;
+        }
+
+        .faq-item:last-child {
+            border-bottom: 0;
+        }
+
+        .faq-q {
+            font-weight: 500;
+            color: #3b2d1f;
+            margin-bottom: 0.2rem;
+        }
+
+        .faq-a {
+            color: #5a4d3e;
+            font-size: 0.95rem;
+            padding-left: 0.2rem;
+        }
+
+        .faq-a a {
+            color: #8b5a32;
+            text-decoration: none;
+            border-bottom: 1px dashed #cda37c;
+            transition: border-bottom 0.2s;
+        }
+
+        .faq-a a:hover {
+            border-bottom: 2px solid #8b5a32;
+        }
+
+        /* 响应式 */
+        @media (max-width: 720px) {
+            body {
+                padding: 1.2rem 1rem;
+            }
+
+            .hero-card {
+                padding: 1.8rem 1.4rem 2rem;
+                border-radius: 28px;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+                padding-left: 0.8rem;
+            }
+
+            .grid-2col {
+                grid-template-columns: 1fr;
+                gap: 1.4rem;
+            }
+
+            .card {
+                padding: 1.6rem 1.4rem;
+            }
+
+            .link-paragraph-card {
+                padding: 1.6rem 1.4rem;
+            }
+
+            .faq-mini {
+                padding: 1.4rem 1.4rem 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .hero-sub {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- 主视觉卡片：从日常查询切入 -->
+        <div class="hero-card">
+            <h1 class="hero-title">日常的对照与延伸</h1>
+            <div class="hero-sub">不急着定义，先习惯翻阅。</div>
+            <p class="hero-text">
+                我们每天都会遇到需要快速核对的时刻：一个名字、一条术语、一段背景。信息本身并不复杂，复杂的是找到值得信赖的落脚点。有时你只需要一个安静的地方，把条目摊开，慢慢比对。<a href="https://cnzh-kaaiyun.com">开云</a> 就是这样一个地方——没有多余的装饰，只有朴素的条目与关联。你可以把它当作手边的便签本，也可以当成延伸阅读的起点。
+            </p>
+            <div class="hero-note">📋 查询 · 对照 · 笔记</div>
+        </div>
+
+        <!-- 双栏：用途卡片 + 适合人群 -->
+        <div class="grid-2col">
+            <!-- 用途卡片 -->
+            <div class="card">
+                <div class="card-header">
+                    <span>📌</span> 用途卡片
+                </div>
+                <p>在不同的场景里，<a href="https://cnzh-kaaiyun.com">开云</a> 提供的信息结构偏向平实、直接，适合以下用法：</p>
+                <ul>
+                    <li>快速检索条目或概念的基本面</li>
+                    <li>将零散的知识点并排对照，发现异同</li>
+                    <li>作为阅读长文之前的背景预习</li>
+                    <li>记录自己理解过程中的碎片，再回头验证</li>
+                </ul>
+                <p style="margin-top: 0.8rem; font-size: 0.95rem; color: #5a4d3e;">—— 不追求面面俱到，但求每一条都有来处。</p>
+            </div>
+
+            <!-- 适合人群卡片 -->
+            <div class="card">
+                <div class="card-header">
+                    <span>👥</span> 适合人群
+                </div>
+                <ul>
+                    <li>习惯边查边读、喜欢做笔记的学习者</li>
+                    <li>需要快速了解某个领域基础框架的入门者</li>
+                    <li>从事写作、整理、翻译，需要反复核对细节的人</li>
+                    <li>对信息洁癖有要求，不愿被算法推荐牵着走的人</li>
+                </ul>
+                <p style="margin-top: 0.8rem; color: #5a4d3e;">这里没有信息流，只有你主动翻开的那一页。</p>
+            </div>
+        </div>
+
+        <!-- 自然链接段落：延伸阅读的角度 -->
+        <div class="link-paragraph-card">
+            <h2>从一条记录开始延伸</h2>
+            <p>
+                很多时候，我们打开一个页面只是想查一个名词，但顺着内部的链接和参考，会不知不觉走进一片新的区域。这种延伸不是刻意的推荐，而是知识本身自带的脉络。<a href="https://cnzh-kaaiyun.com">开云</a> 的页面之间保留着这种朴素的连接——没有弹窗，没有排行榜，只有条目与条目之间的简单跳转。你大可以从一个不起眼的词条出发，用一下午的时间，把相关的线索走完。
+            </p>
+            <p>
+                延伸阅读的价值在于你主动选择下一步，而不是被推送决定。你可以把这里当作一个安静的目录，随时停下来，也随时可以继续。如果你想试试这种感觉，可以从任意一个你感兴趣的条目点开，慢慢看。
+            </p>
+            <p style="margin-top: 0.3rem;">
+                <span class="inline-tag">#对照阅读</span>
+                <span class="inline-tag">#线性浏览</span>
+                <span class="inline-tag">#无干扰</span>
+            </p>
+        </div>
+
+        <!-- FAQ 摘要卡片 -->
+        <div class="faq-mini">
+            <h3>
+                ❓ 常见想法
+                <small>片段式答疑</small>
+            </h3>
+            <div class="faq-item">
+                <div class="faq-q">— 这里的内容会频繁更新吗？</div>
+                <div class="faq-a">以稳定为主，条目和对照信息会保持相对固定的状态，更适合反复查阅。偶尔会根据反馈补充细节。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">— 我可以引用这里的条目吗？</div>
+                <div class="faq-a">当然可以，信息本身属于公共领域。建议你以条目为依据，再根据你的语境做调整。引用时注明出处即可。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">— 如果我想推荐给朋友，怎么说最简洁？</div>
+                <div class="faq-a">就说：有一个叫 <a href="https://cnzh-kaaiyun.com">开云</a> 的地方，适合查东西、做对照，页面很安静，没有多余的东西。</div>
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.9rem; color: #7f6753; border-top: 1px dashed #e6d1bd; padding-top: 1rem;">
+                ⚡ 更多 FAQ 可以在站内慢慢发现。
+            </div>
+        </div>
+    </div>
+</body>
+</html>
